@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-const UserStatsStyled = styled.div`
+//Стиль панели со статистикой проблем
+const ProblemStatsStyled = styled.div`
   display: flex;
   padding: 1rem 0;
   flex-wrap: wrap;
@@ -10,4 +11,4 @@ const UserStatsStyled = styled.div`
   /* border-left: 2px solid ${(props) => props.color}; */
 `;
 
-export default UserStatsStyled;
+export default ProblemStatsStyled;

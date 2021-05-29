@@ -3,6 +3,7 @@ const autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize();
 
+//Схема проблемы в базе данных
 const problemSchema = new mongoose.Schema({
   name: {
     type: String,

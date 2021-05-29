@@ -1,6 +1,3 @@
-/* eslint-disable no-useless-return */
-/* eslint-disable no-underscore-dangle */
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -18,6 +15,7 @@ const validation = {
   passwordChange: passwordChangeValidation
 };
 
+//Проверка правильности данных
 const handleValidation = (body, res, type) => {
   const { error } = validation[type](body);
   if (error) {
@@ -25,6 +23,7 @@ const handleValidation = (body, res, type) => {
   }
 };
 
+//Регистрация пользователя
 const registerUser = async (req, res) => {
   try {
     await handleValidation(req.body, res, 'register');
@@ -44,6 +43,7 @@ const registerUser = async (req, res) => {
   }
 };
 
+//Авторизация пользователя
 const loginUser = async (req, res) => {
   try {
     await handleValidation(req.body, res, 'login');
@@ -63,6 +63,7 @@ const loginUser = async (req, res) => {
   }
 };
 
+//Изменение пароля
 const changePassword = async (req, res) => {
   try {
     const { newPassword, _id } = req.body;

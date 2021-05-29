@@ -19,6 +19,7 @@ const initialProblemState = {
 
 export const ProblemContext = createContext(initialProblemState);
 
+//Функции отправки запросов и заполнения контекста в зависимости от ответа сервера
 export const ProblemProvider = ({ children }) => {
   const [state, dispatch] = useReducer(problemReducer, initialProblemState);
 
@@ -27,7 +28,7 @@ export const ProblemProvider = ({ children }) => {
       type: types.PROBLEM_RESET
     });
   };
-
+  //Получение списка проблем
   const fetchProblems = useCallback(async () => {
     dispatch({
       type: types.PROBLEM_START
@@ -45,7 +46,7 @@ export const ProblemProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Добавление проблемы
   const addProblem = useCallback(async (data) => {
     dispatch({
       type: types.PROBLEM_START
@@ -63,7 +64,7 @@ export const ProblemProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Получение конкретной проблемы
   const fetchSingleProblem = useCallback(async (id) => {
     dispatch({
       type: types.PROBLEM_START
@@ -81,7 +82,7 @@ export const ProblemProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Изменение проблемы
   const editProblem = useCallback(async (data) => {
     dispatch({
       type: types.PROBLEM_START
@@ -99,7 +100,7 @@ export const ProblemProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Задание статуса "Решена" проблеме
   const setSolved = useCallback(async (data) => {
     dispatch({
       type: types.PROBLEM_START
@@ -117,7 +118,7 @@ export const ProblemProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Изменение решения проблемы
   const editProblemSolution = useCallback(async (data) => {
     dispatch({
       type: types.PROBLEM_START
@@ -135,7 +136,7 @@ export const ProblemProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Удаление проблемы
   const deleteProblem = useCallback(async (id) => {
     dispatch({
       type: types.PROBLEM_START

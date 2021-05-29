@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль страницы с данными проблемы
 const SingleProblemStyled = styled.div`
   .ant-input-affix-wrapper,
   .ant-select-selector {

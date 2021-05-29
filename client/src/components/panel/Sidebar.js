@@ -12,6 +12,7 @@ import SidebarStyled from '../styles/SidebarStyled';
 const { Title } = Typography;
 const { Sider } = Layout;
 
+//Боковая панель
 function Sidebar({ role, collapsed, index, loggedInUserId }) {
   return (
     <SidebarStyled collapsed={!collapsed}>

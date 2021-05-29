@@ -4,6 +4,7 @@ import { UserContext } from '../../../context/user/userContext';
 import ProblemForm from '../Forms/ProblemForm';
 import HOC from '../HOC';
 
+//Добавление новой проблемы
 function AddNewProblem(props) {
   const { addProblem } = useContext(ProblemContext);
   const { users, me } = useContext(UserContext).state;

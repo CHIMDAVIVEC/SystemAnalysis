@@ -2,6 +2,7 @@ import React from 'react';
 import StatsCard from './StatsCard/StatsCard';
 import ProblemStatsStyled from '../../../styles/ProblemStatsStyled';
 
+//Статистика проблем
 function ProblemStats({ loading, problems }) {
   const colors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'];
   const icons = [

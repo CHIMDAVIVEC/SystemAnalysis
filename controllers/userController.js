@@ -13,6 +13,7 @@ const validation = {
 const User = require('../models/User');
 const Problem = require('../models/Problem');
 
+//Проверка корректности данных
 const handleValidation = (body, res, type) => {
   const { error } = validation[type](body);
 
@@ -21,6 +22,7 @@ const handleValidation = (body, res, type) => {
   }
 };
 
+//Получение списка пользователей
 const getAllUsers = async (req, res) => {
   try {
     const totalUsers = await getUsers({});
@@ -31,6 +33,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+//Получение данных конкретного пользователя
 const getSingleUser = async (req, res) => {
   try {
     const user = await getSingleUserService({ _id: req.params.id });
@@ -40,6 +43,7 @@ const getSingleUser = async (req, res) => {
   }
 };
 
+//Получение данных текущего пользователя
 const getLoggedInUser = async (req, res) => {
   try {
     const user = await getSingleUserService({ _id: req.user._id });
@@ -49,6 +53,7 @@ const getLoggedInUser = async (req, res) => {
   }
 };
 
+//Изменение данных пользователя
 const editUserAction = async (req, res) => {
   try {
     handleValidation(req.body, res, 'editUser');
@@ -60,6 +65,7 @@ const editUserAction = async (req, res) => {
   }
 };
 
+//Удаление пользователя
 const deleteUserAction = async (req, res) => {
   try {
     const user = await getSingleUserService({ _id: req.params.id });

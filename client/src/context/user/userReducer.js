@@ -1,5 +1,6 @@
 import * as types from './userActionTypes';
 
+//Описание заполнения контекста в зависимости от типа действия
 export default (state, action) => {
   switch (action.type) {
     case types.USER_START:

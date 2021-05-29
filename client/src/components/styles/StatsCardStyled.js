@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль карточки со статистикой пользователей или проблем
 const StatsCardStyled = styled.div`
   margin-right: 1rem;
   margin: 0.5rem 0.5rem 0.5rem 0;

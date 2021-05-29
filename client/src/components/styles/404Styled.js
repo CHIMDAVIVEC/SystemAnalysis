@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль страницы с ошибкой 404
 const MissingPageStyled = styled.div`
   body {
     background-color: #000000;

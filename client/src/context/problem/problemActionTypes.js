@@ -1,3 +1,4 @@
+//Описание типов действий с проблемой
 export const PROBLEM_START = 'PROBLEM_START';
 export const PROBLEM_SUCCESS = 'PROBLEM_SUCCESS';
 export const PROBLEM_FAILURE = 'PROBLEM_FAILURE';

@@ -6,6 +6,7 @@ import axios from 'axios';
 
 const { Option } = Select;
 
+//Страница регистрации нового пользователя
 const RegForm = ({ history }) => {
   const { RegAction, state } = useContext(RegistrationContext);
   const { loading, error, success, errResponse } = state;

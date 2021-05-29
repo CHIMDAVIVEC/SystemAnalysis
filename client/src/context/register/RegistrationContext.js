@@ -12,9 +12,10 @@ const initialRegistrationState = {
 
 export const RegistrationContext = createContext(initialRegistrationState);
 
+//Функции отправки запросов и заполнения контекста в зависимости от ответа сервера
 export const RegistrationProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialRegistrationState);
-
+  //Регистрация
   const RegAction = useCallback(async (data) => {
     dispatch({
       type: types.REG_START

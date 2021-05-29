@@ -1,6 +1,7 @@
 import React from 'react';
 import MissingPageStyled from '../styles/404Styled';
 
+//Страница 404
 function MissingPage() {
   return (
     <MissingPageStyled>

@@ -2,6 +2,7 @@ import React from 'react';
 
 import LoaderStyled from '../styles/LoaderStyled';
 
+//Описание заглушки при загрузке данных
 const Loader = ({ text }) => (
   <div
     style={{

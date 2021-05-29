@@ -3,6 +3,7 @@ import { Form, Button, Space, Typography, InputNumber, Popconfirm } from 'antd';
 
 const { Title, Text } = Typography;
 
+//Метод ранга
 function Ranks({ problem, onClick, loading, array }) {
   const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);

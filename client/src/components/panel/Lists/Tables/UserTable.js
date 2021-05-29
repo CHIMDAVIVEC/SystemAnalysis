@@ -56,6 +56,7 @@ const columns = [
   }
 ];
 
+//Описание таблицы пользователей
 function UserTable({ data }) {
   return (
     <>

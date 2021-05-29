@@ -5,6 +5,7 @@ import HOC from '../HOC';
 import UserTable from './Tables/UserTable';
 import Loader from '../../Loader/Loader';
 
+//Список пользователей для администратора
 const index = '2';
 function UserList() {
   const { users, loading } = useContext(UserContext).state;

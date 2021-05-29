@@ -12,6 +12,7 @@ import Loader from '../../../Loader/Loader';
 import HOC from '../../HOC';
 import MissingPage from '../../../errors/404';
 
+//Страница решения проблемы
 function Solving(props) {
   const { state, fetchSingleProblem, editProblemSolution } =
     useContext(ProblemContext);

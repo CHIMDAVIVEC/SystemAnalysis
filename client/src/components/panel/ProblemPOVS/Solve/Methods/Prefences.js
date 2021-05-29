@@ -12,6 +12,7 @@ import {
 const { Title, Text } = Typography;
 const { Option } = Select;
 
+//Метод предпочтений
 function Prefences({ problem, onClick, loading, array }) {
   const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);

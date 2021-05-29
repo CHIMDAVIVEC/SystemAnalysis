@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль страницы с ошибкой 403
 const ForbiddenPageStyled = styled.div`
   body {
     background-color: #000000;

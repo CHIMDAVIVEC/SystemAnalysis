@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль формы проблемы
 const ProblemFormStyled = styled.div`
   .dynamic-delete-button {
     position: relative;

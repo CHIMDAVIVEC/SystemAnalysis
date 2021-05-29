@@ -17,6 +17,7 @@ import HOC from '../../HOC';
 
 const { TextArea } = Input;
 
+//Страница просмотра результатов решения
 function Results(props) {
   const { state, setSolved, fetchSingleProblem } = useContext(ProblemContext);
   const { problem } = state;
@@ -48,20 +49,17 @@ function Results(props) {
         let sortedList = eval(
           `data.alternatives.sort((a, b) => b.result.method${method} - a.result.method${method})`
         );
-        var k = 0;
-        for (let i = 0; i < sortedList.length; i += 1) {
-          if (i !== sortedList.length - 1) {
-            if (
-              eval(`sortedList[i].result.method${method}`) !==
-              eval(`sortedList[i + 1].result.method${method}`)
-            )
-              k += 1;
-          } else if (
-            eval(`sortedList[i].result.method${method}`) !==
-            eval(`sortedList[i - 1].result.method${method}`)
+        var k = 1;
+        sortedList[0] = {
+          ...sortedList[0],
+          rank: k
+        };
+        for (let i = 1; i < sortedList.length; i += 1) {
+          if (
+            eval(`sortedList[i - 1].result.method${method}`) !==
+            eval(`sortedList[i].result.method${method}`)
           )
             k += 1;
-          k === 0 ? (k += 1) : (k = k);
           sortedList[i] = {
             ...sortedList[i],
             rank: k
@@ -184,7 +182,11 @@ function Results(props) {
                   {eval(`alternative.result.method${method}`) !==
                     '[undefined]' &&
                   eval(`alternative.result.method${method}`) !== null
-                    ? eval(`alternative.result.method${method}`)
+                    ? exp === -1
+                      ? parseFloat(
+                          eval(`alternative.result.method${method}`).toFixed(3)
+                        )
+                      : eval(`alternative.result.method${method}`)
                     : 'решение еще не представлено'}
                 </List.Item>
               )}

@@ -1,3 +1,4 @@
+//Описание валидации данных при работе с пользователями
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 

@@ -4,6 +4,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { AuthContext } from '../../context/auth/AuthContext';
 import checkAuth from '../../helpers/checkAuth';
 
+//Страница авторизации пользователя
 const LoginForm = ({ history }) => {
   const { LoginAction, state, AuthReset } = useContext(AuthContext);
   const { token, loading, error, errResponse } = state;

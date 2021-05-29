@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 
 const { Footer } = Layout;
 
+//Футер страницы
 function PageFooter() {
   return (
     <div style={{ height: '100%' }}>

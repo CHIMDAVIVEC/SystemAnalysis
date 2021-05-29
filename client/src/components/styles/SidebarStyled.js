@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль бокового меню
 const SidebarStyled = styled.div`
   background: linear-gradient(to top, #f0f2f5 20%, #283E51 68%);
 

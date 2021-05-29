@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+//Верификация токена
 function verifiedFunction(req, res, next) {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
@@ -14,6 +15,7 @@ function verifiedFunction(req, res, next) {
   }
 }
 
+//Проверка роли администратора
 function checkAdmin(req, res, next) {
   if (req.user.role === 'admin') {
     return next();

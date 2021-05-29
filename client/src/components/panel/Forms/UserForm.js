@@ -5,6 +5,7 @@ import { Form, Input, Button, Select } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { checkRole } from '../../../helpers/checkAuth';
 
+//Форма создания или редактирования пользователя
 const role = checkRole();
 function UserForm({ user, onFinish, changePasswordModal, loading }) {
   return (

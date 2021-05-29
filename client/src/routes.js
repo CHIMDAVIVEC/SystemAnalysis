@@ -1,3 +1,4 @@
+//Описание всех путей сайта
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import checkAuth, { checkRole } from './helpers/checkAuth';
@@ -26,6 +27,7 @@ import RegForm from './components/auth/Register';
 import MissingPage from './components/errors/404';
 import ForbiddenPage from './components/errors/403';
 
+//Доступ только для аналитика
 export const AnalystIsland = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -39,6 +41,7 @@ export const AnalystIsland = ({ component: Component, ...rest }) => (
   />
 );
 
+//Доступ только для эксперта
 export const ExpertIsland = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -52,6 +55,7 @@ export const ExpertIsland = ({ component: Component, ...rest }) => (
   />
 );
 
+//Доступ только для администратора
 export const AdminIsland = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -65,6 +69,7 @@ export const AdminIsland = ({ component: Component, ...rest }) => (
   />
 );
 
+//Доступ только для данного пользователя или администратора (просмотр настроек только своего аккаунта)
 export const OnlyMeOrBB = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -78,6 +83,7 @@ export const OnlyMeOrBB = ({ component: Component, ...rest }) => (
   />
 );
 
+//Доступ только авторизованным пользователям
 export const LoginIsland = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -91,6 +97,7 @@ export const LoginIsland = ({ component: Component, ...rest }) => (
   />
 );
 
+//Описание того, какой компонент используется на конкретном пути
 const BaseRoute = () => (
   <Switch>
     <Route exact path="/" component={Home} />

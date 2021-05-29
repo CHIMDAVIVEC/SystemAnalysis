@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль панели со статистикой пользователей
 const ProblemStatsStyled = styled.div`
   display: flex;
   padding: 1rem 0;

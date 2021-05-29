@@ -7,6 +7,7 @@ import Loader from '../../Loader/Loader';
 
 import HOC from '../HOC';
 
+//Страница данных о конкретном эксперте
 function SingleExpert(props) {
   const { state, fetchSingleUser, editUserAction } = useContext(UserContext);
   const { loading, user } = state;

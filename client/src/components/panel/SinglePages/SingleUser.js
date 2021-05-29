@@ -10,6 +10,7 @@ import Loader from '../../Loader/Loader';
 
 import HOC from '../HOC';
 
+//Страница данных о конкретном пользователе
 const index = '4';
 function SingleExpert(props) {
   const {

@@ -10,6 +10,7 @@ const {
   deleteProblem
 } = require('../controllers/problemController');
 
+//Описание функций, выполняющихся при получении запроса на указанный путь 
 router.get('/', ensureAuth, getAllProblems);
 
 router.get('/single/:id', getSingleProblem);

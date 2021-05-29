@@ -8,10 +8,9 @@ const {
   changePassword
 } = require('../controllers/authControllers');
 
+//Описание функций, выполняющихся при получении запроса на указанный путь 
 router.post('/register', registerUser);
-
 router.post('/login', loginUser);
-
 router.post('/change-password', ensureAuth, changePassword);
 
 module.exports = router;

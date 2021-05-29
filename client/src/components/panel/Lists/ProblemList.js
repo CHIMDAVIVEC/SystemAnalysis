@@ -6,6 +6,7 @@ import HOC from '../HOC';
 import ProblemTable from './Tables/ProblemTable';
 import Loader from '../../Loader/Loader';
 
+//Список проблем
 const index = '3';
 function ProblemList() {
   const { problems, loading } = useContext(ProblemContext).state;

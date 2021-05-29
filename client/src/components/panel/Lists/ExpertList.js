@@ -4,6 +4,7 @@ import HOC from '../HOC';
 import ExpertTable from './Tables/ExpertTable';
 import Loader from '../../Loader/Loader';
 
+//Список экспертов для аналитика
 const index = '2';
 function ExpertList() {
   const { users, loading } = useContext(UserContext).state;

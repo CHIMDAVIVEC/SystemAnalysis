@@ -12,6 +12,7 @@ import {
 
 const { Title, Text } = Typography;
 
+//Метод взвешенных экспертных оценок
 function WeightedExperts({ problem, onClick, loading, array, Ru }) {
   const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);

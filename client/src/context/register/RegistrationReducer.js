@@ -1,5 +1,6 @@
 import * as types from './RegistrationActionTypes';
 
+//Описание заполнения контекста в зависимости от типа действия 
 export default (state, action) => {
   switch (action.type) {
     case types.REG_START:

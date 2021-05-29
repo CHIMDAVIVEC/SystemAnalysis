@@ -53,6 +53,7 @@ const columns = [
   }
 ];
 
+//Описание таблицы экспертов
 function ExpertTable({ data }) {
   if (data === '') data = [];
   data = data.filter((record) => record.role === 'expert');

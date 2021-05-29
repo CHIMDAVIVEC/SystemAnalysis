@@ -19,6 +19,7 @@ import HOC from '../HOC';
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
+//Страница данных проблемы для эксперта
 function ExpertPOV(props) {
   const { state, editProblem, fetchSingleProblem } = useContext(ProblemContext);
   const { problem } = state;

@@ -83,6 +83,7 @@ const columns = [
   }
 ];
 
+//Описание таблицы проблем
 function ProblemTable({ data }) {
   if (data === '') data = [];
   role === 'analyst'

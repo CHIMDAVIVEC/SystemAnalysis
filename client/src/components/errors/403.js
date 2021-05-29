@@ -1,6 +1,7 @@
 import React from 'react';
 import ForbiddenPageStyled from '../styles/403Styled';
 
+//Страница 403
 function ForbiddenPage() {
   return (
     <ForbiddenPageStyled>

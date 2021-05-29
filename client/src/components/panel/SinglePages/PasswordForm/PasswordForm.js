@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
 
+//Вспомогательный компонент - изменение пароля пользователя
 const PasswordForm = ({ visible, onCreate, onCancel, id }) => {
   const [form] = Form.useForm();
   return (

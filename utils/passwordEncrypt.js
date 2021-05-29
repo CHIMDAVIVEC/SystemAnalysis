@@ -1,3 +1,4 @@
+//Шифрование пароля
 const bcrypt = require('bcryptjs');
 
 async function passwordEncrypt(rawPassword) {

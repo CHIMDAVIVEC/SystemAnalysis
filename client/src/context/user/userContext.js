@@ -19,7 +19,7 @@ const initialUserState = {
 };
 
 export const UserContext = createContext(initialUserState);
-
+//Функции отправки запросов и заполнения контекста в зависимости от ответа сервера
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
 
@@ -28,7 +28,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_RESET
     });
   };
-
+  //Получение списка пользователей
   const fetchUsers = useCallback(async () => {
     dispatch({
       type: types.USER_START
@@ -46,7 +46,7 @@ export const UserProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Получение данных текущего пользователя
   const fetchLoggedInUser = useCallback(async () => {
     dispatch({
       type: types.USER_START
@@ -64,7 +64,7 @@ export const UserProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Добавление нового пользователя
   const addUser = useCallback(async (data) => {
     dispatch({
       type: types.USER_START
@@ -82,7 +82,7 @@ export const UserProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Получение данных конкретного пользователя
   const fetchSingleUser = useCallback(async (id) => {
     dispatch({
       type: types.USER_START
@@ -109,7 +109,7 @@ export const UserProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Изменение данных пользователя
   const editUserAction = useCallback(async (data) => {
     dispatch({
       type: types.USER_START
@@ -127,7 +127,7 @@ export const UserProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Удаление пользователя
   const deleteUserAction = useCallback(async (id) => {
     dispatch({
       type: types.USER_START
@@ -146,7 +146,7 @@ export const UserProvider = ({ children }) => {
       });
     }
   }, []);
-
+  //Изменение пароля пользователя
   const changeUserPasswordAction = useCallback(async (data) => {
     dispatch({
       type: types.USER_START

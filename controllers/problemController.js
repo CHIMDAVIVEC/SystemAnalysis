@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
 const {
   getProblems,
@@ -9,6 +8,7 @@ const { getUsers } = require('../services/user.services');
 
 const Problem = require('../models/Problem');
 
+//Добавление новой проблемы
 const addProblem = async (req, res) => {
   try {
     const nameExist = await Problem.findOne({ name: req.body.name });
@@ -39,6 +39,7 @@ const addProblem = async (req, res) => {
   }
 };
 
+//Получение списка всех проблем
 const getAllProblems = async (req, res) => {
   try {
     const totalProblems = await getProblems({});
@@ -49,6 +50,7 @@ const getAllProblems = async (req, res) => {
   }
 };
 
+//Получение данных конкретной проблемы
 const getSingleProblem = async (req, res) => {
   try {
     const problem = await getSingleProblemService({ _id: req.params.id });
@@ -58,6 +60,7 @@ const getSingleProblem = async (req, res) => {
   }
 };
 
+//Редактирование проблемы
 const editProblem = async (req, res) => {
   try {
     const temp = { experts: [], alternatives: [] };
@@ -83,6 +86,7 @@ const editProblem = async (req, res) => {
   }
 };
 
+//Задание статуса "Решена"
 const setSolved = async (req, res) => {
   try {
     const data = {
@@ -96,12 +100,15 @@ const setSolved = async (req, res) => {
   }
 };
 
+//Задание решения проблемы
+//Расчет взвешенных оценок альтернатив в соответствии с алгоритмом конкретного метода
 async function setSolutions(problem, method, data) {
   try {
     let array = [];
     const altlen = problem.alternatives.length;
     const explen = problem.experts.length;
     switch (method) {
+      //Метод парных сравнений
       case '1': {
         let R = 0;
         const C = [];
@@ -115,11 +122,11 @@ async function setSolutions(problem, method, data) {
           Ci = 0;
         }
         for (let i = 0; i < altlen; i += 1) {
-          // eslint-disable-next-line no-param-reassign
           problem.alternatives[i].result.method1 = C[i] / R;
         }
         return problem;
       }
+      //Метод взвешенных экспертных оценок
       case '2': {
         const totalUsers = await getUsers({});
         const totalExperts = [];
@@ -127,16 +134,13 @@ async function setSolutions(problem, method, data) {
           for (
             let k = 0;
             k < problem.experts.length;
-            k += 1 // eslint-disable-next-line no-underscore-dangle
+            k += 1
           ) {
-            // eslint-disable-next-line no-underscore-dangle
             if (problem.experts[k].id + '' === totalUsers[i]._id + '') {
-              // eslint-disable-next-line no-underscore-dangle
               totalExperts.push(totalUsers[i]);
             }
           }
         }
-        // eslint-disable-next-line no-case-declarations
         array = [];
         const R1 = [];
         const R2 = [];
@@ -163,14 +167,13 @@ async function setSolutions(problem, method, data) {
           problem.alternatives[j].result.method2 = 0;
           problem.alternatives[j].result.method3 = 0;
           for (let i = 0; i < explen; i += 1) {
-            // eslint-disable-next-line no-param-reassign
             problem.alternatives[j].result.method2 += array[i][j] * S1[i];
-            // eslint-disable-next-line no-param-reassign
             problem.alternatives[j].result.method3 += array[i][j] * S2[i];
           }
         }
         return problem;
       }
+      //Метод предпочтений
       case '3': {
         array = [];
         for (let i = 0; i < explen; i += 1) {
@@ -197,11 +200,9 @@ async function setSolutions(problem, method, data) {
           L.push(Lj);
         }
         for (let j = 0; j < altlen; j += 1) {
-          // eslint-disable-next-line no-param-reassign
           problem.alternatives[j].result.method4 = 0;
         }
         for (let j = 0; j < altlen; j += 1) {
-          // eslint-disable-next-line no-param-reassign
           problem.alternatives[j].result.method4 += parseFloat(
             (L[j] / sumL).toFixed(3)
           );
@@ -209,6 +210,7 @@ async function setSolutions(problem, method, data) {
 
         return problem;
       }
+      //Метод ранга
       case '4': {
         array = [];
         for (let i = 0; i < explen; i += 1) {
@@ -238,12 +240,12 @@ async function setSolutions(problem, method, data) {
           for (let i = 0; i < explen; i += 1) {
             Rij += R[i][j];
           }
-          // eslint-disable-next-line no-param-reassign
           problem.alternatives[j].result.method5 = Rij / explen;
           Rij = 0;
         }
         return problem;
       }
+      //Метод полного попарного сопоставления
       case '5': {
         const N = altlen * (altlen - 1);
         array = [];
@@ -269,7 +271,6 @@ async function setSolutions(problem, method, data) {
           for (let k = 0; k < explen; k += 1) {
             sumNorm += F[k][i];
           }
-          // eslint-disable-next-line no-param-reassign
           problem.alternatives[i].result.method6 = sumNorm;
 
           sumNorm = 0;
@@ -284,6 +285,7 @@ async function setSolutions(problem, method, data) {
   }
 }
 
+//Изменение статуса и прогресса решения проблемы конкретным методом
 function setStatusAndProgress(problem, method, newProgress, oldProgress) {
   try {
     let final = 0;
@@ -296,7 +298,6 @@ function setStatusAndProgress(problem, method, newProgress, oldProgress) {
     }
 
     problem.progress = Math.ceil(final);
-    // eslint-disable-next-line no-param-reassign
     if (problem.progress > 100) problem.progress = 100;
     if (problem.progress === 100) problem.status = 'Решена';
     return problem;
@@ -305,6 +306,7 @@ function setStatusAndProgress(problem, method, newProgress, oldProgress) {
   }
 }
 
+//Изменение решения проблемы экспертом конкретным методом
 const editProblemSolution = async (req, res) => {
   try {
     const id = req.body.problemId;
@@ -343,15 +345,10 @@ const editProblemSolution = async (req, res) => {
 
     problem.experts.forEach((item) => {
       if (item.id + '' === me + '') {
-        // eslint-disable-next-line no-eval
         eval(`item.solutions.method${method}.values = data`);
-        // eslint-disable-next-line no-eval
         eval(`oldProgress = item.solutions.method${method}.progress`);
-        // eslint-disable-next-line no-eval
         eval(`item.solutions.method${method}.progress = newProgress`);
-        // eslint-disable-next-line no-param-reassign
         item.Ra = req.body.Ra;
-        // eslint-disable-next-line no-param-reassign
         item.Ru = req.body.Ru;
       }
     });
@@ -376,6 +373,7 @@ const editProblemSolution = async (req, res) => {
   }
 };
 
+//Удаление проблемы
 const deleteProblem = async (req, res) => {
   try {
     const problem = await getSingleProblemService({ _id: req.params.id });

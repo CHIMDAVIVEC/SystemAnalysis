@@ -1,5 +1,6 @@
 const User = require('../models/User');
-
+//Функции для взаимодействия с базой данных пользователей
+//Получение данных конкретного пользователя при авторизации
 const getUser = async (query) => {
   try {
     const user = await User.findOne(query).select('+password');
@@ -13,6 +14,7 @@ const getUser = async (query) => {
   }
 };
 
+//Получение и изменение данных конкретного пользователя
 const getAndEditUser = async (query, newData) => {
   try {
     const user = await User.findOneAndUpdate(query, newData, {
@@ -26,6 +28,7 @@ const getAndEditUser = async (query, newData) => {
   }
 };
 
+//Получение данных конкретного пользователя
 const getSingleUserService = async (query) => {
   try {
     const user = await User.findOne(query).select('+password');
@@ -35,6 +38,7 @@ const getSingleUserService = async (query) => {
   }
 };
 
+//Получение списка пользователей с ролями аналитик и эксперт
 const getUsers = async (query) => {
   try {
     const users = await User.find(query).find({ role: ['analyst', 'expert'] });

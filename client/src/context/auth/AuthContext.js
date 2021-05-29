@@ -12,6 +12,7 @@ const initialAuthState = {
 
 export const AuthContext = createContext(initialAuthState);
 
+//Функции отправки запросов и заполнения контекста в зависимости от ответа сервера
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialAuthState);
 
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }) => {
       type: types.AUTH_RESET
     });
   };
-
+  //Авторизация
   const LoginAction = useCallback(async (data) => {
     dispatch({
       type: types.AUTH_START

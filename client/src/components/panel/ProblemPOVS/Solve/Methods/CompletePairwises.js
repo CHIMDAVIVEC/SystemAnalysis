@@ -11,7 +11,8 @@ import {
 
 const { Title, Text } = Typography;
 
-function PairComparisons({ problem, onClick, loading, array }) {
+//Метод полного попарного сопоставления
+function CompletePairwises({ problem, onClick, loading, array }) {
   const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);
   const [scale, setScale] = useState(1);
@@ -188,4 +189,4 @@ function PairComparisons({ problem, onClick, loading, array }) {
   );
 }
 
-export default PairComparisons;
+export default CompletePairwises;

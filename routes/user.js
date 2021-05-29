@@ -11,6 +11,7 @@ const {
   deleteUserAction
 } = require('../controllers/userController');
 
+//Описание функций, выполняющихся при получении запроса на указанный путь 
 router.get('/', ensureAuth, getAllUsers);
 router.get('/me', ensureAuth, getLoggedInUser);
 

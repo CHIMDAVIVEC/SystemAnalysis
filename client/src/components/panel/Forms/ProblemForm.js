@@ -13,6 +13,7 @@ import ProblemFormStyled from '../../styles/ProblemFormStyled';
 const { TextArea } = Input;
 const { Option } = Select;
 
+//Форма создания или редактирования проблемы
 function ProblemForm({ problem, experts, onFinish, loading }) {
   const handleChange = (event) => {
     const userId = event.target.value;

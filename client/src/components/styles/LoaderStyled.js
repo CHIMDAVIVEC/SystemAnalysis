@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+//Стиль заглушки при загрузке данных на страницу
 const CustomLoaderStyled = styled.div`
   @keyframes rotate360 {
     from {

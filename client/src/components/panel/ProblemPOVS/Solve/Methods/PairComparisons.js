@@ -3,6 +3,7 @@ import { Form, Button, Radio, Space, Typography, Popconfirm } from 'antd';
 
 const { Title, Text } = Typography;
 
+//Метод парных сравнений
 function PairComparisons({ problem, onClick, loading, array }) {
   const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);

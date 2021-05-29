@@ -7,6 +7,8 @@ import Sidebar from './Sidebar';
 import PageHeader from './Header';
 import PageFooter from './Footer';
 
+//Компонент высшего порядка
+//Отображение боковой панели, хедера и футера для всех компонентов, использующих этот элемент
 function HOC(Component, index) {
   return function DashboardCustomHoc(props) {
     const [collapsed, setCollapsed] = useState(true);

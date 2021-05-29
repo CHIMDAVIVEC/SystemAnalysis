@@ -8,6 +8,7 @@ import HeaderStyled from '../styles/HeaderStyled';
 
 const { Header } = Layout;
 
+//Хедер страницы
 function PageHeader({ collapsed, toggle, history, name, surname }) {
 
   const handleLogout = () => {

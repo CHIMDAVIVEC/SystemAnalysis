@@ -19,6 +19,7 @@ import HOC from '../HOC';
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
+//Страница данных проблемы для аналитика
 function AnalystPOV(props) {
   const { state, fetchSingleProblem, deleteProblem } =
     useContext(ProblemContext);

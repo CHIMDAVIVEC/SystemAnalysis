@@ -3,6 +3,7 @@ import { UserContext } from '../../../context/user/userContext';
 import UserForm from '../Forms/UserForm';
 import HOC from '../HOC';
 
+//Добавление нового пользователя
 function AddNewUser() {
   const { addUser } = useContext(UserContext);
 

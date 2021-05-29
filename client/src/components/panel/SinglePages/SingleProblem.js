@@ -9,6 +9,7 @@ import Loader from '../../Loader/Loader';
 
 import HOC from '../HOC';
 
+//Страница данных о конкретной проблеме
 function SingleProblem(props) {
   const { state, fetchSingleProblem, editProblem, deleteProblem } = useContext(
     ProblemContext

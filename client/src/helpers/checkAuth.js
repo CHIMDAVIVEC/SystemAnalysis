@@ -1,5 +1,7 @@
 import decode from 'jwt-decode';
 
+//Вспомогательные функции получения информации из токена
+//Проверка авторизации по наличию корректного токена
 const checkAuth = () => {
   const token = localStorage.getItem('howard_shores');
   if (!token) return false;
@@ -12,6 +14,7 @@ const checkAuth = () => {
   }
 };
 
+//Получение роли
 export const checkRole = () => {
   const token = localStorage.getItem('howard_shores');
   if (!token) return null;
@@ -24,6 +27,7 @@ export const checkRole = () => {
   }
 };
 
+//Получение идентификатора
 export const getId = () => {
   const token = localStorage.getItem('howard_shores');
   if (!token) return null;

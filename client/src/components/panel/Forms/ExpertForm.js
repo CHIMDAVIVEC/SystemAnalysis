@@ -5,6 +5,7 @@ import { Form, Input, Button, InputNumber } from 'antd';
 
 const { TextArea } = Input;
 
+//Форма редактирования эксперта
 function ExpertForm({ user, onFinish, loading }) {
   return (
     <>

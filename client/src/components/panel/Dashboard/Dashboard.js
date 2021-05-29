@@ -6,6 +6,7 @@ import UserStats from './Stats/UserStats';
 import ProblemStats from './Stats/ProblemStats';
 import HOC from '../HOC';
 
+//Главная страница со статистикой проблем и пользователей
 const { Title } = Typography;
 const index = '1';
 function Dashboard() {

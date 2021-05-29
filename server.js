@@ -17,8 +17,8 @@ app.use(morgan('tiny'));
 app.use(cors());
 connectDB();
 
-const port = process.env.PORT || 3333;
-const hostname = 'localhost';
+const port = process.env.PORT;
+const hostname = process.env.HOST;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
