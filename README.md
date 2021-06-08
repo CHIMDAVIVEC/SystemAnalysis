@@ -15,7 +15,7 @@
 - cd ..
 
 # Start
-- Before starting, you need to sed environment into these files:
+- Before starting, you need to set environment into these files:
 - - /SystemAnalysis/.env (MongoDB URI, Token secret, Host, Port)
 - - /SystemAnalysis/client/.env (Host and Port)
 - - /SystemAnalysis/client/package.json (Proxy)
