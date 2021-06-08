@@ -16,6 +16,7 @@ import SingleExpert from './components/panel/SinglePages/SingleExpert';
 import ProblemList from './components/panel/Lists/ProblemList';
 import SingleProblem from './components/panel/SinglePages/SingleProblem';
 import AddNewProblem from './components/panel/AddNew/AddNewProblem';
+import AddNewExpert from './components/panel/AddNew/AddNewExpert';
 import AnalystPOV from './components/panel/ProblemPOVS/AnalystPOV';
 import ExpertPOV from './components/panel/ProblemPOVS/ExpertPOV';
 import Results from './components/panel/ProblemPOVS/Solve/Results';
@@ -114,6 +115,7 @@ const BaseRoute = () => (
     <AdminIsland exact path="/add-new-user" component={AddNewUser} />
 
     <AnalystIsland exact path="/add-new-problem" component={AddNewProblem} />
+    <AnalystIsland exact path="/add-new-expert" component={AddNewExpert} />
     <AnalystIsland exact path="/problem/:id" component={SingleProblem} />
     <AnalystIsland exact path="/analyst/problem/:id" component={AnalystPOV} />
     <AnalystIsland exact path="/experts" component={ExpertList} />

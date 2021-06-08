@@ -5,22 +5,11 @@ const { Title, Text } = Typography;
 
 //Метод ранга
 function Ranks({ problem, onClick, loading, array }) {
-  const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);
   const altlen = problem.alternatives.length;
 
   let values = {
-    solution: solution,
-    Ra: null,
-    Ru: null
-  };
-
-  const next = () => {
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
+    solution: solution
   };
 
   useEffect(() => {
@@ -39,7 +28,6 @@ function Ranks({ problem, onClick, loading, array }) {
     setSolution(temp);
   }
 
-  let count = altlen;
   let group = 0;
   return (
     <>
@@ -50,44 +38,50 @@ function Ranks({ problem, onClick, loading, array }) {
         size="large"
         style={{ clear: 'both' }}
       >
-        <div className="row justify-content-center align-items-center">
-          {solution.map(
-            (item, i) =>
-              current === (group += 1) && (
-                <Space direction="vertical" style={{ width: '50%' }}>
-                  <Title level={2}>
-                    {group}
-                    {'/'}
-                    {count}
-                  </Title>
-                  <Space direction="vertical">
-                    <Title level={4}>
-                      {'Дайте оценку альтернативе от 0 до 10'}
-                      <br />
-                      {'Больше - предпочтительнее'}
-                    </Title>
-                    <Text strong>{problem.alternatives[i].formulation}:</Text>
-                    <InputNumber
-                      key={group}
-                      name="solution"
-                      defaultValue={solution[i]}
-                      min={0}
-                      max={10}
-                      step={1}
-                      onChange={(value) => handleChange(value, i)}
-                    />
-                  </Space>
+        <Title level={4}>
+          {'Задайте оценку альтернативе от 0 до 10 включительно'}
+          <br />
+          {'Наиболее предпочтительнее - 10'}
+          <br />
+          {'Наименее - 0'}
+        </Title>
+        <div
+          className="row justify-content-center align-items-center"
+          style={{ height: '58vh', overflow: 'auto', clear: 'both' }}
+        >
+          {solution.map((item, i) => (
+            <Space
+              direction="vertical"
+              style={{
+                width: '100%',
+                border: '1px solid rgba(0, 0, 0, 0.25)',
+                margin: '3px',
+                padding: '11px'
+              }}
+            >
+              <Title level={4}>{(group += 1)}</Title>
+              <Space direction="vertical">
+                <Text strong>
+                  {'Альтернатива: '}
+                  {problem.alternatives[i].formulation}
+                </Text>
+                <Space direction="horizontal">
+                  <Text strong>{'Оценка: '}</Text>
+                  <InputNumber
+                    key={group}
+                    name="solution"
+                    defaultValue={solution[problem.alternatives[i].id]}
+                    min={0}
+                    max={10}
+                    step={1}
+                    onChange={(value) =>
+                      handleChange(value, problem.alternatives[i].id)
+                    }
+                  />
                 </Space>
-              )
-          )}
-          <Space direction="vertical">
-            {current < count && (
-              <Button type="primary" onClick={() => next()}>
-                Далее
-              </Button>
-            )}
-            {current > 0 && <Button onClick={() => prev()}>Назад</Button>}
-          </Space>
+              </Space>
+            </Space>
+          ))}
         </div>
         <div
           className="row justify-content-center align-items-center"
@@ -101,7 +95,17 @@ function Ranks({ problem, onClick, loading, array }) {
                 htmlType="submit"
                 className="mr-2"
                 disabled={loading}
-                onClick={() => onClick(values)}
+                onClick={() => onClick(values, 1)}
+              >
+                Отправить
+              </Button>
+              <Button
+                type="primary"
+                loading={loading}
+                htmlType="submit"
+                className="mr-2"
+                disabled={loading}
+                onClick={() => onClick(values, 0)}
               >
                 Завершить
               </Button>

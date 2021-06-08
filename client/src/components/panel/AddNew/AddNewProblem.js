@@ -12,7 +12,7 @@ function AddNewProblem(props) {
 
   const onFinish = (values) => {
     values.analyst = me._id;
-    addProblem(values).then(() => setTimeout(function(){ window.location.replace('/problems');}, 1000));
+    addProblem(values);
   };
 
   return (

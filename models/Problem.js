@@ -23,13 +23,10 @@ const problemSchema = new mongoose.Schema({
         required: true,
         type: mongoose.Types.ObjectId
       },
-      Ra: {
+      R: {
         type: Number,
-        default: 0.0
-      },
-      Ru: {
-        type: Number,
-        default: 0.0
+        default: 0.0,
+        max: 12
       },
       solutions: {
         method1: {
@@ -152,17 +149,13 @@ const problemSchema = new mongoose.Schema({
         method5: {
           type: Number,
           default: null
-        },
-        method6: {
-          type: Number,
-          default: null
         }
       }
     }
   ],
   status: {
     type: String,
-    enum: ['Открыта', 'Решается', 'Решена'],
+    enum: ['Открыта', 'Оценивается', 'Решена'],
     default: 'Открыта'
   },
   progress: {
@@ -170,6 +163,11 @@ const problemSchema = new mongoose.Schema({
     min: 0,
     max: 100,
     default: 0
+  },
+  scale: {
+    type: Number,
+    min: 1,
+    default: 1
   },
   Id: {
     type: Number,

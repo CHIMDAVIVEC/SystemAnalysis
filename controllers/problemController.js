@@ -1,10 +1,10 @@
+/* eslint-disable */
 const mongoose = require('mongoose');
 const {
   getProblems,
   getSingleProblemService,
   getAndEditProblem
 } = require('../services/problem.services');
-const { getUsers } = require('../services/user.services');
 
 const Problem = require('../models/Problem');
 
@@ -21,9 +21,10 @@ const addProblem = async (req, res) => {
     const data = new Problem();
     data.name = req.body.name;
     data.formulation = req.body.formulation;
-
+    data.scale = req.body.scale;
+    
     req.body.experts.forEach((item) => {
-      data.experts.push({ id: item });
+      data.experts.push({ id: item.id, R: item.R });
     });
 
     data.analyst = req.body.analyst;
@@ -64,9 +65,8 @@ const getSingleProblem = async (req, res) => {
 const editProblem = async (req, res) => {
   try {
     const temp = { experts: [], alternatives: [] };
-
     req.body.experts.forEach((item) => {
-      temp.experts.push({ id: item });
+      temp.experts.push({ id: item.id, R: item.R });
     });
 
     req.body.alternatives.forEach((item, index) => {
@@ -128,48 +128,26 @@ async function setSolutions(problem, method, data) {
       }
       //Метод взвешенных экспертных оценок
       case '2': {
-        const totalUsers = await getUsers({});
-        const totalExperts = [];
-        for (let i = 0; i < totalUsers.length; i += 1) {
-          for (
-            let k = 0;
-            k < problem.experts.length;
-            k += 1
-          ) {
-            if (problem.experts[k].id + '' === totalUsers[i]._id + '') {
-              totalExperts.push(totalUsers[i]);
-            }
-          }
-        }
+        const totalExperts = problem.experts;
+
         array = [];
-        const R1 = [];
-        const R2 = [];
+        const R = [];
+
         for (let i = 0; i < explen; i += 1) {
-          R1.push(totalExperts[i].rating);
+          array.push(totalExperts[i].solutions.method2.values);
+          R.push(totalExperts[i].R);
         }
-        for (let i = 0; i < explen; i += 1) {
-          array.push(problem.experts[i].solutions.method2.values);
-          R2.push((0.1 * problem.experts[i].Ru + problem.experts[i].Ra) / 2);
-        }
-        const S1 = [];
-        const S2 = [];
-        let sumR1 = 0;
-        let sumR2 = 0;
-        for (let i = 0; i < explen; i += 1) {
-          sumR1 += R1[i];
-          sumR2 += R2[i];
-        }
-        for (let i = 0; i < explen; i += 1) {
-          S1.push(R1[i] / sumR1);
-          S2.push(R2[i] / sumR2);
-        }
+
+        const S = [];
+        let sumR = 0;
+        for (let i = 0; i < explen; i += 1) sumR += R[i];
+
+        for (let i = 0; i < explen; i += 1) S.push(R[i] / sumR);
+
         for (let j = 0; j < altlen; j += 1) {
           problem.alternatives[j].result.method2 = 0;
-          problem.alternatives[j].result.method3 = 0;
-          for (let i = 0; i < explen; i += 1) {
-            problem.alternatives[j].result.method2 += array[i][j] * S1[i];
-            problem.alternatives[j].result.method3 += array[i][j] * S2[i];
-          }
+          for (let i = 0; i < explen; i += 1)
+            problem.alternatives[j].result.method2 += array[i][j] * S[i];
         }
         return problem;
       }
@@ -200,10 +178,10 @@ async function setSolutions(problem, method, data) {
           L.push(Lj);
         }
         for (let j = 0; j < altlen; j += 1) {
-          problem.alternatives[j].result.method4 = 0;
+          problem.alternatives[j].result.method3 = 0;
         }
         for (let j = 0; j < altlen; j += 1) {
-          problem.alternatives[j].result.method4 += parseFloat(
+          problem.alternatives[j].result.method3 += parseFloat(
             (L[j] / sumL).toFixed(3)
           );
         }
@@ -240,7 +218,7 @@ async function setSolutions(problem, method, data) {
           for (let i = 0; i < explen; i += 1) {
             Rij += R[i][j];
           }
-          problem.alternatives[j].result.method5 = Rij / explen;
+          problem.alternatives[j].result.method4 = Rij / explen;
           Rij = 0;
         }
         return problem;
@@ -271,7 +249,7 @@ async function setSolutions(problem, method, data) {
           for (let k = 0; k < explen; k += 1) {
             sumNorm += F[k][i];
           }
-          problem.alternatives[i].result.method6 = sumNorm;
+          problem.alternatives[i].result.method5 = sumNorm;
 
           sumNorm = 0;
         }
@@ -306,13 +284,14 @@ function setStatusAndProgress(problem, method, newProgress, oldProgress) {
   }
 }
 
-//Изменение решения проблемы экспертом конкретным методом
+//Изменение оценок экспертом конкретным методом
 const editProblemSolution = async (req, res) => {
   try {
     const id = req.body.problemId;
     const { method } = req.body;
     const me = req.body.expert;
     const data = req.body.solution;
+    const solved = req.body.solved;
     let problem = await getSingleProblemService({ _id: id });
 
     let counter = 0;
@@ -332,24 +311,23 @@ const editProblemSolution = async (req, res) => {
         }
       }
     }
+
     if (method === '2') {
-      size += 2;
-      if (req.body.Ru !== null) {
-        counter += 1;
-        if (req.body.Ra !== null) counter += 1;
-      }
+      size += 1;
+      if (req.body.R !== 0.0) counter += 1;
     }
+
     let oldProgress = 0;
     let newProgress = 0;
     newProgress = (counter / size) * 100;
-
+    if (solved === 0) newProgress -= 1;
+    let R = 0.0;
     problem.experts.forEach((item) => {
       if (item.id + '' === me + '') {
         eval(`item.solutions.method${method}.values = data`);
         eval(`oldProgress = item.solutions.method${method}.progress`);
         eval(`item.solutions.method${method}.progress = newProgress`);
-        item.Ra = req.body.Ra;
-        item.Ru = req.body.Ru;
+        eval(`R = item.R`);
       }
     });
 
@@ -359,7 +337,7 @@ const editProblemSolution = async (req, res) => {
       (exp) => eval(`exp.solutions.method${method}.progress`) !== 100
     );
     if (flag.length === 0 || (method === '1' && newProgress === 100)) {
-      if (method === '2' && req.body.Ra !== null && req.body.Ru !== null) {
+      if (method === '2' && R !== 0.0) {
         problem = await setSolutions(problem, method, data);
       } else if (method !== '2') {
         problem = await setSolutions(problem, method, data);

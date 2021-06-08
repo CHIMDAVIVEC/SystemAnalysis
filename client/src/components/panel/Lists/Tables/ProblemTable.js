@@ -59,8 +59,8 @@ const columns = [
         value: 'Открыта'
       },
       {
-        text: 'Решается',
-        value: 'Решается'
+        text: 'Оценивается',
+        value: 'Оценивается'
       },
       {
         text: 'Решена',
@@ -72,7 +72,7 @@ const columns = [
         status={
           text === 'Открыта'
             ? 'default'
-            : text === 'Решается'
+            : text === 'Оценивается'
             ? 'processing'
             : 'success'
         }
@@ -103,6 +103,7 @@ function ProblemTable({ data }) {
         rowKey="Id"
         dataSource={data}
         style={{ clear: 'both' }}
+        pagination={false}
       />
     </>
   );

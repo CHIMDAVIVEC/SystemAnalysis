@@ -134,7 +134,6 @@ export const UserProvider = ({ children }) => {
     });
     try {
       await ClientAPI.get(`/api/user/delete/${id}`);
-      console.log(id);
       dispatch({
         type: types.USER_DELETE,
         payload: id

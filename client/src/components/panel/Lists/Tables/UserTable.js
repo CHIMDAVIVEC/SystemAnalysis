@@ -67,6 +67,7 @@ function UserTable({ data }) {
         dataSource={data}
         rowKey="Id"
         style={{ clear: 'both' }}
+        pagination={false}
       />
     </>
   );

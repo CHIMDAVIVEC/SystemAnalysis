@@ -98,7 +98,7 @@ const LoginForm = ({ history }) => {
                   <Button
                     onClick={registration}
                   >
-                    Еще не зарегистрировались?
+                    Вы аналитик и ещё не зарегистрировались?
                   </Button>
                 </Form.Item>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select, InputNumber } from 'antd';
 import {
   FontColorsOutlined,
   InfoOutlined,
@@ -31,12 +31,14 @@ function ProblemForm({ problem, experts, onFinish, loading }) {
         initialValues={
           problem
             ? {
-                name: problem.name,
-                formulation: problem.formulation,
+                ...problem,
                 alternatives: problem.alternatives.map(
                   (alternative) => alternative.formulation
                 ),
-                experts: problem.experts.map((expert) => expert.id)
+                experts: problem.experts.map((expert) => ({
+                  id: expert.id,
+                  R: expert.R
+                }))
               }
             : {
                 name: null,
@@ -63,6 +65,10 @@ function ProblemForm({ problem, experts, onFinish, loading }) {
               ]}
             >
               <Input
+                style={{
+                  background: 'white',
+                  color: 'black'
+                }}
                 prefix={<FontColorsOutlined className="site-form-item-icon" />}
                 placeholder="Название"
               />
@@ -81,6 +87,10 @@ function ProblemForm({ problem, experts, onFinish, loading }) {
               ]}
             >
               <TextArea
+                style={{
+                  background: 'white',
+                  color: 'black'
+                }}
                 autoSize
                 prefix={<InfoOutlined className="site-form-item-icon" />}
                 placeholder="Формулировка"
@@ -88,14 +98,44 @@ function ProblemForm({ problem, experts, onFinish, loading }) {
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col span={12}>
+            <Form.Item
+              name="scale"
+              label="Шкала для метода полного попарного сопоставления"
+              rules={[
+                {
+                  required: true,
+                  message: 'Задайте размерность шкалы!'
+                }
+              ]}
+            >
+              <InputNumber
+                min={1}
+                disabled={
+                  problem
+                    ? problem.status === 'Открыта'
+                      ? false
+                      : true
+                    : false
+                }
+                style={{
+                  background: 'white',
+                  color: 'black'
+                }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col span={12}>
+            <label>Альтернативы</label>
             <Form.List name="alternatives">
               {(fields, { add, remove }) => (
                 <>
                   {fields.map((field, index) => (
                     <Form.Item required={false} key={field.key}>
+                      {'№' + (index + 1) + ': '}
                       <Form.Item
                         {...field}
                         validateTrigger={['onChange', 'onBlur']}
@@ -109,12 +149,24 @@ function ProblemForm({ problem, experts, onFinish, loading }) {
                         noStyle
                       >
                         <TextArea
+                          disabled={
+                            problem
+                              ? problem.status === 'Открыта'
+                                ? false
+                                : true
+                              : false
+                          }
                           autoSize
                           placeholder={index + 1 + ': Альтернатива'}
-                          style={{ width: '90%' }}
+                          style={{
+                            width: '80%',
+                            background: 'white',
+                            color: 'black'
+                          }}
                         />
                       </Form.Item>
-                      {fields.length > 2 ? (
+                      {fields.length > 2 &&
+                      (!problem || problem.status === 'Открыта') ? (
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => remove(field.name)}
@@ -122,67 +174,77 @@ function ProblemForm({ problem, experts, onFinish, loading }) {
                       ) : null}
                     </Form.Item>
                   ))}
-                  <Form.Item>
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      icon={<PlusOutlined />}
-                    >
-                      Добавить альтернативу
-                    </Button>
-                  </Form.Item>
+                  {(!problem || problem.status === 'Открыта') && (
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        icon={<PlusOutlined />}
+                      >
+                        Добавить альтернативу
+                      </Button>
+                    </Form.Item>
+                  )}
                 </>
               )}
             </Form.List>
           </Col>
 
           <Col span={12}>
+            <label>Эксперты</label>
             <Form.List name="experts">
               {(fields, { add, remove }) => (
                 <>
-                  {fields.map((field, index) => (
-                    <Form.Item required={false} key={field.key}>
+                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <div
+                      key={key}
+                      style={{ display: 'flex', width: '100%' }}
+                      align="start"
+                    >
                       <Form.Item
-                        {...field}
+                        {...restField}
                         validateTrigger={['onChange', 'onBlur']}
+                        name={[name, 'id']}
+                        fieldKey={[fieldKey, 'id']}
                         rules={[
                           {
                             required: true,
                             whitespace: true,
-                            message: 'Выберите эксперта или удалите поле!'
+                            message: 'Выберите эксперта!'
                           }
                         ]}
-                        noStyle
+                        style={{ width: '100%' }}
                         id="user"
-                        componentClass="select"
                         onChange={handleChange.bind(this)}
                       >
-                        <Select
-                          showSearch
-                          placeholder={index + 1 + ': Эксперт'}
-                          style={{ width: '90%' }}
-                        >
+                        <Select placeholder={key + 1 + ': Эксперт'}>
                           {experts.map((expert, i) => (
-                              <Option
-                                key={i}
-                                value={expert._id}
-                                disabled={!expert.rating}
-                              >
-                                <Link to={`/expert/${expert._id}`}>
-                                  {expert.name} {expert.surname} {': '}{' '}
-                                  {expert.rating}
-                                </Link>
-                              </Option>
+                            <Option key={i} value={expert._id}>
+                              {expert.name} {expert.surname}
+                            </Option>
                           ))}
                         </Select>
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'R']}
+                        fieldKey={[fieldKey, 'R']}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Задайте оценку компетентности!'
+                          }
+                        ]}
+                      >
+                        <InputNumber min={1} max={12} />
                       </Form.Item>
                       {fields.length > 1 ? (
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
-                          onClick={() => remove(field.name)}
+                          onClick={() => remove(name)}
                         />
                       ) : null}
-                    </Form.Item>
+                    </div>
                   ))}
                   <Form.Item>
                     <Button

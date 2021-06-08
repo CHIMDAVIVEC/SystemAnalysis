@@ -19,7 +19,8 @@ const RegForm = ({ history }) => {
   const onFinish = async (values) => {
     const data = {
       email: values.email,
-      password: values.password
+      password: values.password,
+      role: "analyst"
     };
     await RegAction(values);
     Login(data);
@@ -124,21 +125,6 @@ const RegForm = ({ history }) => {
                     placeholder="Пароль"
                     className="rounded-pill"
                   />
-                </Form.Item>
-
-                <Form.Item
-                  name="role"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Выберите роль!'
-                    }
-                  ]}
-                >
-                  <Select>
-                    <Option value="analyst">Аналитик</Option>
-                    <Option value="expert">Эксперт</Option>
-                  </Select>
                 </Form.Item>
 
                 <Form.Item>

@@ -5,23 +5,13 @@ const { Title, Text } = Typography;
 
 //Метод парных сравнений
 function PairComparisons({ problem, onClick, loading, array }) {
-  const [current, setCurrent] = useState(1);
   const [solution, setSolution] = useState([]);
   const altlen = problem.alternatives.length;
 
   let values = {
-    solution: solution,
-    Ra: null,
-    Ru: null
+    solution: solution
   };
 
-  const next = () => {
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
-  };
   useEffect(() => {
     let temp = [];
     if (array.length !== 0) setSolution(array);
@@ -44,7 +34,6 @@ function PairComparisons({ problem, onClick, loading, array }) {
     setSolution(temp);
   }
 
-  let count = (altlen * (altlen - 1)) / 2;
   let group = 0;
   return (
     <>
@@ -55,40 +44,58 @@ function PairComparisons({ problem, onClick, loading, array }) {
         size="large"
         style={{ clear: 'both' }}
       >
-        <div className="row justify-content-center align-items-center">
+        <Title level={4}>
+          {'Из двух альтернатив выберите наиболее предпочтительную:'}
+        </Title>
+        <div
+          className="row justify-content-center align-items-center"
+          style={{ height: '60vh', overflow: 'auto' }}
+        >
           {solution.map((column, i) =>
             column.map(
               (row, k) =>
-                i < k &&
-                current === (group += 1) && (
-                  <Space direction="vertical" style={{ width: '40%' }}>
-                    <Title level={2}>
-                      {group}
-                      {'/'}
-                      {count}
-                    </Title>
-                    <Title level={4}>
-                      {'Выберите наиболее предпочтительную альтернативу'}
-                    </Title>
+                i < k && (
+                  <Space
+                    direction="vertical"
+                    style={{
+                      width: '100%',
+                      border: '1px solid rgba(0, 0, 0, 0.25)',
+                      margin: '3px',
+                      padding: '11px'
+                    }}
+                  >
+                    <Title level={3}>{(group += 1)}</Title>
                     <Radio.Group
                       key={group}
                       name="solution"
-                      defaultValue={solution[i][k]}
-                      onChange={(data) => handleChange(data.target.value, i, k)}
+                      defaultValue={
+                        solution[problem.alternatives[i].id][
+                          problem.alternatives[k].id
+                        ]
+                      }
+                      onChange={(data) =>
+                        handleChange(
+                          data.target.value,
+                          problem.alternatives[i].id,
+                          problem.alternatives[k].id
+                        )
+                      }
                     >
-                      <Space direction="vertical">
+                      <Space direction="vertical" size="large">
                         <Radio value={1}>
                           <Text strong>
+                            {'Альтернатива 1: '}
                             {problem.alternatives[i].formulation}
                           </Text>
                         </Radio>
-                        <Radio value={0.5}>
-                          <Text strong>равны</Text>
-                        </Radio>
                         <Radio value={0.0}>
                           <Text strong>
+                            {'Альтернатива 2: '}
                             {problem.alternatives[k].formulation}
                           </Text>
+                        </Radio>
+                        <Radio value={0.5}>
+                          <Text>Равнозначны</Text>
                         </Radio>
                       </Space>
                     </Radio.Group>
@@ -96,14 +103,6 @@ function PairComparisons({ problem, onClick, loading, array }) {
                 )
             )
           )}
-          <Space direction="vertical">
-            {current < count && (
-              <Button type="primary" onClick={() => next()}>
-                Далее
-              </Button>
-            )}
-            {current > 0 && <Button onClick={() => prev()}>Назад</Button>}
-          </Space>
         </div>
         <div
           className="row justify-content-center align-items-center"
@@ -117,12 +116,22 @@ function PairComparisons({ problem, onClick, loading, array }) {
                 htmlType="submit"
                 className="mr-2"
                 disabled={loading}
-                onClick={() => onClick(values)}
+                onClick={() => onClick(values, 1)}
+              >
+                Отправить
+              </Button>
+              <Button
+                type="primary"
+                loading={loading}
+                htmlType="submit"
+                className="mr-2"
+                disabled={loading}
+                onClick={() => onClick(values, 0)}
               >
                 Завершить
               </Button>
               <Popconfirm
-                title="Последние решения не сохранятся. Вы уверены?"
+                title="Последние изменения не сохранятся. Вы уверены?"
                 onConfirm={() =>
                   window.location.replace(`/expert/problem/${problem._id}`)
                 }

@@ -9,8 +9,7 @@ import {
   Input,
   Radio,
   Badge,
-  Progress,
-  Popconfirm
+  Progress
 } from 'antd';
 import { ProblemContext } from '../../../context/problem/problemContext';
 import Loader from '../../Loader/Loader';
@@ -21,7 +20,7 @@ const { TextArea } = Input;
 
 //Страница данных проблемы для эксперта
 function ExpertPOV(props) {
-  const { state, editProblem, fetchSingleProblem } = useContext(ProblemContext);
+  const { state, fetchSingleProblem } = useContext(ProblemContext);
   const { problem } = state;
   const id = props.match.params.id;
   const [method, setMethod] = useState(0);
@@ -33,26 +32,6 @@ function ExpertPOV(props) {
     fetchData();
   }, [fetchSingleProblem, id]);
 
-  const onClick = () => {
-    var values = problem;
-    if (values.status === 'Открыта') {
-      const temp = { experts: [], alternatives: [] };
-
-      problem.experts.forEach((item) => {
-        temp.experts.push(item.id);
-      });
-      console.log(problem);
-      problem.alternatives.forEach((item) => {
-        temp.alternatives.push(item.formulation);
-      });
-
-      values.alternatives = temp.alternatives;
-      values.experts = temp.experts;
-      values.status = 'Решается';
-      editProblem(values);
-    }
-  };
-
   function isUnsolved(meth) {
     return problem.alternatives
       .map((alt) => eval(`alt.result.method${meth}`))
@@ -61,6 +40,14 @@ function ExpertPOV(props) {
 
   function handleChange(value) {
     setMethod(value);
+  }
+
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
   }
 
   return (
@@ -89,7 +76,7 @@ function ExpertPOV(props) {
                   status={
                     problem.status === 'Открыта'
                       ? 'default'
-                      : problem.status === 'Решается'
+                      : problem.status === 'Оценивается'
                       ? 'processing'
                       : 'success'
                   }
@@ -114,62 +101,31 @@ function ExpertPOV(props) {
                   />
                 </Space>
               </Descriptions.Item>
-              {problem.status !== 'Решена' && (
-                <Descriptions.Item label="Метод решения">
-                  <Space direction="vertical">
+              {problem.status === 'Оценивается' && (
+                <Descriptions.Item label="Метод оценивания">
+                  <Space direction="vertical" size="middle">
                     <Radio.Group
                       name="method"
                       defaultValue={method}
                       onChange={(data) => handleChange(data.target.value)}
                     >
-                      <Space direction="vertical">
-                        {isUnsolved(1) && (
-                          <Radio value={1}>Парных сравнений</Radio>
-                        )}
-                        {isUnsolved(2) && (
-                          <Radio value={2}>Взвешенных экспертных оценок</Radio>
-                        )}
-                        {isUnsolved(4) && <Radio value={3}>Предпочтения</Radio>}
-                        {isUnsolved(5) && <Radio value={4}>Ранга</Radio>}
-                        {isUnsolved(6) && (
-                          <Radio value={5}>
-                            Полного попарного сопоставления
-                          </Radio>
-                        )}
+                      <Space direction="horizontal">
+                        {isUnsolved(1) && <Radio value={1}>№1</Radio>}
+                        {isUnsolved(2) && <Radio value={2}>№2</Radio>}
+                        {isUnsolved(3) && <Radio value={3}>№3</Radio>}
+                        {isUnsolved(4) && <Radio value={4}>№4</Radio>}
+                        {isUnsolved(5) && <Radio value={5}>№5</Radio>}
                       </Space>
                     </Radio.Group>
-                    {problem.status === 'Открыта' ? (
-                      <Popconfirm
-                        title={"Это сменит статус на 'Решается'. Вы уверены?"}
-                        onConfirm={() => {
-                          onClick();
-                          window.location.replace(
-                            `/problem/solving/${problem._id}/${method}`
-                          );
-                        }}
-                        okText="Да"
-                        cancelText="Нет"
-                      >
-                        <Button
-                          type="primary"
-                          className="mr-2"
-                          disabled={method !== 0 ? false : true}
-                        >
-                          Перейти к решению
-                        </Button>
-                      </Popconfirm>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className="mr-2"
-                        onClick={onClick}
-                        disabled={method !== 0 ? false : true}
-                      >
-                        <Link to={`/problem/solving/${problem._id}/${method}`}>
-                          Перейти к решению
-                        </Link>
-                      </Button>
-                    )}
+                    <Button
+                      type="primary"
+                      className="mr-2"
+                      disabled={method !== 0 ? false : true}
+                    >
+                      <Link to={`/problem/solving/${problem._id}/${method}`}>
+                        Перейти к оцениванию
+                      </Link>
+                    </Button>
                   </Space>
                 </Descriptions.Item>
               )}
@@ -177,10 +133,8 @@ function ExpertPOV(props) {
             <Space direction="vertical">
               <Collapse>
                 <Panel header="Альтернативы" key="1">
-                  {problem.alternatives.map((alternative, k) => (
-                    <p key={k}>
-                      {'№' + (k + 1)} {alternative.formulation}
-                    </p>
+                  {shuffle(problem.alternatives).map((alternative, k) => (
+                    <p key={k}>{alternative.formulation}</p>
                   ))}
                 </Panel>
               </Collapse>

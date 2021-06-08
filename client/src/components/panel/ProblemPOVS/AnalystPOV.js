@@ -21,7 +21,7 @@ const { TextArea } = Input;
 
 //Страница данных проблемы для аналитика
 function AnalystPOV(props) {
-  const { state, fetchSingleProblem, deleteProblem } =
+  const { state, fetchSingleProblem, setSolved, deleteProblem } =
     useContext(ProblemContext);
 
   const id = props.match.params.id;
@@ -41,20 +41,30 @@ function AnalystPOV(props) {
     deleteProblem(id).then(() => window.location.replace('/problems'));
   };
 
+  const onClick = () => {
+    let values = {
+      ...problem,
+      status: 'Оценивается'
+    };
+    setSolved(values);
+  };
+
   return (
     <>
       {problem ? (
         <>
-          <Popconfirm
-            title="Вы уверены?"
-            onConfirm={onConfirmDelete}
-            okText="Удалить"
-            cancelText="Закрыть"
-          >
-            <Button className="float-right" danger>
-              Удалить проблему
-            </Button>
-          </Popconfirm>
+          {problem.status === 'Открыта' && (
+            <Popconfirm
+              title="Вы уверены?"
+              onConfirm={onConfirmDelete}
+              okText="Удалить"
+              cancelText="Закрыть"
+            >
+              <Button className="float-right" danger>
+                Удалить проблему
+              </Button>
+            </Popconfirm>
+          )}
           <Form
             name="problem_details_form"
             className="login-form"
@@ -77,7 +87,7 @@ function AnalystPOV(props) {
                   status={
                     problem.status === 'Открыта'
                       ? 'default'
-                      : problem.status === 'Решается'
+                      : problem.status === 'Оценивается'
                       ? 'processing'
                       : 'success'
                   }
@@ -109,7 +119,11 @@ function AnalystPOV(props) {
                 </Descriptions.Item>
               )}
             </Descriptions>
-
+            <Descriptions layout="horizontal">
+              <Descriptions.Item label="Шкала оценки" span={3}>
+                {problem.scale}
+              </Descriptions.Item>
+            </Descriptions>
             <Space direction="vertical">
               <Collapse>
                 <Panel header="Альтернативы" key="1">
@@ -130,7 +144,7 @@ function AnalystPOV(props) {
                       <Link key={i} to={`/expert/${expert._id}`}>
                         <p key={i} value={expert._id}>
                           {'№' + (i + 1)} {expert.name} {expert.surname} {': '}{' '}
-                          {expert.rating}
+                          {problem.experts[i].R}
                         </p>
                       </Link>
                     ))}
@@ -142,8 +156,24 @@ function AnalystPOV(props) {
               style={{ marginTop: '5%' }}
             >
               <div className="align-self-center text-center">
-                <Space direction="horizontal">
+                <Space direction="vertical">
                   {problem.status === 'Открыта' && (
+                    <Popconfirm
+                      title={
+                        'Это разрешит экспертам начать оценивание, но запретит вам удаление проблемы. Вы уверены?'
+                      }
+                      onConfirm={() => {
+                        onClick();
+                      }}
+                      okText="Да"
+                      cancelText="Нет"
+                    >
+                      <Button type="primary" className="mr-2">
+                        Разрешить оценивание
+                      </Button>
+                    </Popconfirm>
+                  )}
+                  {problem.status !== 'Решена' && (
                     <Button type="info" className="login-form-button">
                       <Link to={`/problem/${problem._id}`}>Редактировать</Link>
                     </Button>

@@ -33,12 +33,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'analyst', 'expert']
   },
-  rating: {
-    type: Number,
-    min: 0,
-    max: 12,
-    default: 0.0
-  },
   profession: {
     type: String,
     max: 1024,

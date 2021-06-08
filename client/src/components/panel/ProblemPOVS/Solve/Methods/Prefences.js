@@ -1,70 +1,121 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Form,
-  Button,
-  Select,
-  Space,
-  Typography,
-  message,
-  Popconfirm
-} from 'antd';
-
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Form, Button, Typography, Popconfirm, Table } from 'antd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import update from 'immutability-helper';
+import PrefencesStyled from '../../../../styles/PrefencesStyled';
 const { Title, Text } = Typography;
-const { Option } = Select;
+
+const type = 'DragableBodyRow';
+
+const DragableBodyRow = ({
+  index,
+  moveRow,
+  className,
+  style,
+  ...restProps
+}) => {
+  const ref = useRef();
+  const [{ isOver, dropClassName }, drop] = useDrop({
+    accept: type,
+    collect: (monitor) => {
+      const { index: dragIndex } = monitor.getItem() || {};
+      if (dragIndex === index) {
+        return {};
+      }
+      return {
+        isOver: monitor.isOver(),
+        dropClassName:
+          dragIndex < index ? ' drop-over-downward' : ' drop-over-upward'
+      };
+    },
+    drop: (item) => {
+      moveRow(item.index, index);
+    }
+  });
+  const [, drag] = useDrag({
+    type,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging()
+    })
+  });
+  drop(drag(ref));
+
+  return (
+    <tr
+      ref={ref}
+      className={`${className}${isOver ? dropClassName : ''}`}
+      style={{ cursor: 'move', ...style }}
+      {...restProps}
+    />
+  );
+};
+
+const columns = [
+  {
+    title: 'Альтернативы',
+    dataIndex: 'formulation',
+    key: 'id',
+    render: (text) => <Text strong>{text}</Text>
+  }
+];
 
 //Метод предпочтений
-function Prefences({ problem, onClick, loading, array }) {
-  const [current, setCurrent] = useState(1);
-  const [solution, setSolution] = useState([]);
-  const [list, setList] = useState([]);
+const Prefences: React.FC = ({ problem, onClick, loading, array }) => {
+  const [data, setData] = useState([{}]);
   const altlen = problem.alternatives.length;
 
-  let values = {
-    solution: solution,
-    Ra: null,
-    Ru: null
-  };
-
-  const next = () => {
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
-  };
+  function handleSolution(solved) {
+    let temp = new Array(altlen);
+    data.forEach((e, i) => (temp[e.id] = i + 1));
+    let values = { solution: temp };
+    onClick(values, solved);
+  }
 
   useEffect(() => {
     let temp = [];
-    let tempL = [];
 
-    if (array.length === altlen) setSolution(array);
-    else {
-      for (let i = 0; i < altlen; i += 1) temp[i] = null;
-      setSolution(temp);
+    if (array.length === altlen) {
+      temp = new Array(altlen);
+      let alt;
+      array.forEach((v, i) => {
+        alt = problem.alternatives.find((a) => a.id === i);
+        temp[v - 1] = { id: alt.id, formulation: alt.formulation };
+      });
+      setData(temp);
+    } else {
+      temp = [];
+      problem.alternatives.forEach((alt) =>
+        temp.push({ id: alt.id, formulation: alt.formulation })
+      );
+      setData(temp);
     }
-
-    for (let i = 0; i < altlen; i += 1) tempL[i] = i + 1;
-    setList(tempL);
   }, []);
 
-  function handleChange(value, i) {
-    checkIfChecked(value);
-    let temp = solution;
-    temp[i] = value;
-    setSolution(temp);
-  }
-
-  const checkIfChecked = (value) => {
-    for (let i = 0; i < altlen; i += 1) {
-      if (solution[i] === value) message.error('Такая оценка уже есть!');
+  const components = {
+    body: {
+      row: DragableBodyRow
     }
   };
 
-  let count = altlen;
-  let group = 0;
-  console.log(solution);
+  const moveRow = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragRow = data[dragIndex];
+      setData(
+        update(data, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragRow]
+          ]
+        })
+      );
+    },
+    [data]
+  );
+
   return (
-    <>
+    <PrefencesStyled>
       <Form
         name="problem_details_form"
         className="login-form"
@@ -72,50 +123,28 @@ function Prefences({ problem, onClick, loading, array }) {
         size="large"
         style={{ clear: 'both' }}
       >
-        <div className="row justify-content-center align-items-center">
-          {solution.map(
-            (item, i) =>
-              current === (group += 1) && (
-                <Space direction="vertical" style={{ width: '50%' }}>
-                  <Title level={2}>
-                    {group}
-                    {'/'}
-                    {count}
-                  </Title>
-                  <Title level={4}>
-                    {'Оцените альтернативу:'}
-                    <br />
-                    {'Наиболее важная - 1'}
-                    <br />
-                    {'Наименее важная - n (число альтернатив)'}
-                    <br />
-                    {'Оценки не должы совпадать'}
-                  </Title>
-                  <Space direction="vertical" style={{ width: '60%' }}>
-                    <Text strong>{problem.alternatives[i].formulation}:</Text>
-                    <Select
-                      style={{ width: '100%' }}
-                      onSelect={(value) => handleChange(value, i)}
-                      defaultValue={solution[i]}
-                    >
-                      {list.map((elem, k) => (
-                        <Option key={k} value={list[k]}>
-                          {list[k]}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Space>
-                </Space>
-              )
-          )}
-          <Space direction="vertical">
-            {current < count && (
-              <Button type="primary" onClick={() => next()}>
-                Далее
-              </Button>
-            )}
-            {current > 0 && <Button onClick={() => prev()}>Назад</Button>}
-          </Space>
+        <Title level={4}>
+          {'Расположите альтернативы в порядке значимости'}
+          <br />
+          {'Выше - значимее'}
+        </Title>
+        <div
+          className="row justify-content-center align-items-center"
+          style={{ height: '58vh', overflow: 'auto' }}
+        >
+          <DndProvider backend={HTML5Backend}>
+            <Table
+              style={{ width: '33%' }}
+              columns={columns}
+              dataSource={data}
+              components={components}
+              onRow={(record, index) => ({
+                index,
+                moveRow
+              })}
+              pagination={false}
+            />
+          </DndProvider>
         </div>
         <div
           className="row justify-content-center align-items-center"
@@ -129,7 +158,17 @@ function Prefences({ problem, onClick, loading, array }) {
                 htmlType="submit"
                 className="mr-2"
                 disabled={loading}
-                onClick={() => onClick(values)}
+                onClick={() => handleSolution(1)}
+              >
+                Отправить
+              </Button>
+              <Button
+                type="primary"
+                loading={loading}
+                htmlType="submit"
+                className="mr-2"
+                disabled={loading}
+                onClick={() => handleSolution(0)}
               >
                 Завершить
               </Button>
@@ -149,8 +188,8 @@ function Prefences({ problem, onClick, loading, array }) {
           </div>
         </div>
       </Form>
-    </>
+    </PrefencesStyled>
   );
-}
+};
 
 export default Prefences;

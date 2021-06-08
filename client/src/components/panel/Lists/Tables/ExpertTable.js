@@ -31,14 +31,6 @@ const columns = [
   },
 
   {
-    title: 'Оценка',
-    dataIndex: 'rating',
-    key: 'rating',
-    sorter: (a, b) => a.Id - b.Id,
-    sortDirections: ['ascend', 'descend']
-  },
-
-  {
     title: 'Профессия',
     dataIndex: 'profession',
     key: 'profession'
@@ -69,6 +61,7 @@ function ExpertTable({ data }) {
         dataSource={data}
         rowKey="Id"
         style={{ clear: 'both' }}
+        pagination={false}
       />
     </>
   );

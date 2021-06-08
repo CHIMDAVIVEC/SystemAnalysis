@@ -22,7 +22,10 @@ function Solving(props) {
   const method = props.match.params.method;
 
   useEffect(() => {
-    fetchSingleProblem(id);
+    async function fetchData() {
+      await fetchSingleProblem(id);
+    }
+    fetchData();
   }, [fetchSingleProblem, id]);
 
   const getSolutions = () => {
@@ -31,39 +34,33 @@ function Solving(props) {
     );
   };
 
-  const getRu = () => {
-    return eval(`problem.experts.find((expert) => expert.id === me._id).Ru`);
-  };
-
-  const getRa = () => {
-    return eval(`problem.experts.find((expert) => expert.id === me._id).Ra`);
-  };
-
-  const onClick = (values) => {
-    let sum = 0;
-    let ru = 0;
-    if (Array.isArray(values.Ra))
-      for (let i = 0; i < values.Ra.length; i += 1) sum += values.Ra[i];
-    else sum = getRa();
-    if (method === 2) ru = values.Ru;
-    else ru = getRu();
+  const onClick = (values, solved) => {
     const data = {
       solution: values.solution,
       problemId: id,
       expert: me._id,
       method: method,
-      Ra: parseFloat(sum.toFixed(3)),
-      Ru: ru
+      solved: solved
     };
     editProblemSolution(data).then(props.history.goBack());
   };
+
+  function shuffle() {
+    let a = problem.alternatives;
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    const data = {...problem, alternatives: a}
+    return data;
+  }
 
   return (
     <>
       {problem && me ? (
         (method === '1' && (
           <PairComparisons
-            problem={problem}
+            problem={shuffle()}
             onClick={onClick}
             loading={loading}
             array={getSolutions()}
@@ -71,16 +68,15 @@ function Solving(props) {
         )) ||
         (method === '2' && (
           <WeightedExperts
-            problem={problem}
+            problem={shuffle()}
             onClick={onClick}
             loading={loading}
             array={getSolutions()}
-            Ru={getRu()}
           />
         )) ||
         (method === '3' && (
           <Prefences
-            problem={problem}
+            problem={shuffle()}
             onClick={onClick}
             loading={loading}
             array={getSolutions()}
@@ -88,7 +84,7 @@ function Solving(props) {
         )) ||
         (method === '4' && (
           <Ranks
-            problem={problem}
+            problem={shuffle()}
             onClick={onClick}
             loading={loading}
             array={getSolutions()}
@@ -96,7 +92,7 @@ function Solving(props) {
         )) ||
         (method === '5' && (
           <CompletePairwises
-            problem={problem}
+            problem={shuffle()}
             onClick={onClick}
             loading={loading}
             array={getSolutions()}

@@ -1,18 +1,19 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button, InputNumber } from 'antd';
+import { Form, Input, Button } from 'antd';
+import { LockOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
 //Форма редактирования эксперта
-function ExpertForm({ user, onFinish, loading }) {
+function ExpertForm({ user, onFinish, changePasswordModal, loading }) {
   return (
     <>
       <Form
         name="user_details_form"
         className="login-form"
-        initialValues={{ ...user, rating: user.rating === 0 ? 1 : user.rating }}
+        initialValues={user}
         onFinish={onFinish}
         layout="vertical"
         size="large"
@@ -20,22 +21,38 @@ function ExpertForm({ user, onFinish, loading }) {
       >
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col span={12}>
-            <Form.Item name="name" label="Имя">
+            <Form.Item
+              name="name"
+              label="Имя"
+              rules={[
+                {
+                  required: true,
+                  message: 'Введите имя эксперта!'
+                }
+              ]}
+            >
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 10 }}
                 cols={50}
-                disabled={true}
                 style={{ background: 'white', color: 'black' }}
               />
             </Form.Item>
           </Col>
 
           <Col span={12}>
-            <Form.Item name="surname" label="Фамилия">
+            <Form.Item
+              name="surname"
+              label="Фамилия"
+              rules={[
+                {
+                  required: true,
+                  message: 'Введите фамилию эксперта!'
+                }
+              ]}
+            >
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 10 }}
                 cols={50}
-                disabled={true}
                 style={{ background: 'white', color: 'black' }}
               />
             </Form.Item>
@@ -44,12 +61,45 @@ function ExpertForm({ user, onFinish, loading }) {
 
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col span={12}>
-            <Form.Item name="email" label="E-Mail">
+            <Form.Item
+              name="email"
+              label="E-Mail"
+              rules={[
+                {
+                  required: true,
+                  message: 'Введите E-Mail эксперта!'
+                }
+              ]}
+            >
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 10 }}
                 cols={50}
-                disabled={true}
                 style={{ background: 'white', color: 'black' }}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={user ? <span>Сменить пароль</span> : 'Пароль'}
+              rules={
+                user
+                  ? []
+                  : [
+                      {
+                        required: true,
+                        message: 'Введите пароль!'
+                      }
+                    ]
+              }
+              name="password"
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Пароль"
+                readOnly={user ? true : false}
+                value={user ? 'u' : ''}
+                onClick={() => (user ? changePasswordModal() : {})}
               />
             </Form.Item>
           </Col>
@@ -68,21 +118,6 @@ function ExpertForm({ user, onFinish, loading }) {
             >
               <TextArea autoSize={{ minRows: 1, maxRows: 10 }} cols={50} />
             </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="rating"
-              label="Оценка"
-              rules={[
-                {
-                  required: true,
-                  message: 'Введите оценку в соответствии с таблицей!'
-                }
-              ]}
-            >
-              <InputNumber min={1} max={12} />
-            </Form.Item>
-            <img alt="" src="https://i.imgur.com/wtFcwoX.png" />
           </Col>
         </Row>
         <div

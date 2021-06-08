@@ -9,7 +9,6 @@ const registerValidation = (data) => {
     email: Joi.string().min(6).required().email(),
     password: Joi.string().required().min(6),
     role: Joi.string().required(),
-    rating: Joi.number().min(0).max(12),
     profession: Joi.string()
   });
 
@@ -23,7 +22,6 @@ const userEditValidation = (data) => {
     email: Joi.string().min(6).email(),
     role: Joi.string(),
     _id: Joi.string().required(),
-    rating: Joi.number().min(0).max(12),
     profession: Joi.string()
   });
 

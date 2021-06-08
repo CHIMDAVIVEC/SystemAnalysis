@@ -9,8 +9,11 @@
     "antd": "^4.5.2",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.2",
+    "immutability-helper": "^3.1.1",
     "jwt-decode": "^2.2.0",
     "react": "^16.13.1",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
@@ -37,5 +40,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://192.168.0.117:3333"
+  "proxy":
 }

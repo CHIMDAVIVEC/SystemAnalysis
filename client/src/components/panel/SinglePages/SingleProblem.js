@@ -11,9 +11,8 @@ import HOC from '../HOC';
 
 //Страница данных о конкретной проблеме
 function SingleProblem(props) {
-  const { state, fetchSingleProblem, editProblem, deleteProblem } = useContext(
-    ProblemContext
-  );
+  const { state, fetchSingleProblem, editProblem, deleteProblem } =
+    useContext(ProblemContext);
 
   const { users, me } = useContext(UserContext).state;
   const experts = Object.values(users).filter((user) => user.role === 'expert');
@@ -37,12 +36,12 @@ function SingleProblem(props) {
   };
 
   const onConfirmDelete = () => {
-    deleteProblem(id).then(() => setTimeout(function(){ window.location.replace('/problems');}, 1000));
+    deleteProblem(id);
   };
 
   return (
     <SingleProblemStyled>
-      {problem && problem.status === 'Открыта' ? (
+      {problem ? (
         <>
           <Typography>Редактирование проблемы "{problem.name}"</Typography>
           {problem.status === 'Открыта' && (

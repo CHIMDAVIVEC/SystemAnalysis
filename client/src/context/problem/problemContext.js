@@ -143,7 +143,6 @@ export const ProblemProvider = ({ children }) => {
     });
     try {
       await ClientAPI.get(`/api/problem/delete/${id}`);
-      console.log(id);
       dispatch({
         type: types.PROBLEM_DELETE,
         payload: id
